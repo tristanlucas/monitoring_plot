@@ -1,20 +1,17 @@
 #!/usr/bin/gnuplot -persist
-
 set term x11
-set title "Real-Time CPU Usage (Live)"
-set xlabel "Time (seconds)"
-set ylabel "CPU Usage (%)"
+set title "CPU Usage (%)"
+set yrange [1:100] 
+set ylabel "Usage (%)"
+set xdata time
+set timefmt "%S"
+set format x "%S"
 set grid
+while (1) {
+            plot "cpu_usage.dat" using 1:2 title 'CPU Usage' with lines lc rgb 'red'
+            pause 0.4
+            replot
+        }
 
-# Set initial x-axis range (20 seconds)
-set xrange [time - 20:time]
 
-# Loop for continuous replotting with dynamic x-axis
-set key left box
-plot "cpu_usage.dat" using 1:2 with lines title "CPU Usage" noautoscale x
 
-do for [i=0:100] {  # Loop indefinitely (adjust as needed)
-  pause 1  # Update interval (adjust for desired frequency)
-  reread  # Reload data from file
-  set xrange [time - 20:time]  # Update x-axis range (20 seconds window)
-}
