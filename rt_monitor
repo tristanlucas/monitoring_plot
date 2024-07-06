@@ -1,0 +1,12 @@
+#!/bin/bash
+datafile="cpu_usage.dat"
+echo "Time CPU_Usage" > $datafile
+while true; do
+    current_time=$(date +%S)
+    cpu_usage=$(top -bn1 | grep "Cpu(s)" | \
+                sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | \
+                awk '{print 100 - $1}')
+
+    echo "$current_time $cpu_usage" >> $datafile
+    sleep 1
+done
